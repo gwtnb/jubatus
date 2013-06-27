@@ -1,0 +1,11 @@
+def options(opt):
+  pass
+
+def configure(conf):
+  pass
+
+def build(bld):
+  bld.program(source = 'tutorial.cpp ../../server/server/anomaly_serv.cpp',
+              target = 'tutorial',
+              includes = '.',
+              use = 'jubaserv_framework jubatus_anomaly jubaserv_common jubatus_driver')
