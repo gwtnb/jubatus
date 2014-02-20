@@ -37,12 +37,10 @@
 #include <sstream>
 #include <iostream>
 
-#include "../../system/file.h"
 #include "../../system/sysstat.h"
 
 using namespace std;
 using namespace jubatus::util::data::code;
-using namespace jubatus::util::system::file;
 
 namespace jubatus {
 namespace util {

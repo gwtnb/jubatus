@@ -54,7 +54,7 @@ class rpc_error {
   }
 
   bool has_exception() const {
-    return exception_;
+    return exception_.get();
   }
   void throw_exception() const {
     exception_->throw_exception();

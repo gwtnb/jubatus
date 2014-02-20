@@ -17,11 +17,13 @@
 #include "server_base.hpp"
 
 #include <sys/file.h>
-#include <ext/stdio_filebuf.h>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
+#ifdef __GLIBCXX__
+#include <ext/stdio_filebuf.h>
+#endif
 #include <glog/logging.h>
 
 #include "jubatus/core/common/exception.hpp"
@@ -90,8 +92,30 @@ bool server_base::save(const std::string& id) {
         << core::common::exception::error_errno(errno));
   }
 
+  #ifdef __GLIBCXX__
   // use gcc-specific extension
   int fd = static_cast<__gnu_cxx::stdio_filebuf<char> *>(ofs.rdbuf())->fd();
+  #else
+  struct dummy_filebuf : std::streambuf {
+    char* extbuf_;
+    const char* extbufnext_;
+    const char* extbufend_;
+    char extbuf_min_[8];
+    size_t ebs_;
+    char_type* intbuf_;
+    size_t ibs_;
+    FILE* file_;
+    const std::codecvt<char_type, char, std::char_traits<char>::state_type>* cv_;
+    std::char_traits<char>::state_type st_;
+    std::char_traits<char>::state_type st_last_;
+    std::ios_base::openmode om_;
+    std::ios_base::openmode cm_;
+    bool owns_eb_;
+    bool owns_ib_;
+    bool always_noconv_;
+  };
+  int fd = fileno(reinterpret_cast<dummy_filebuf*>(ofs.rdbuf())->file_);
+  #endif
   if (flock(fd, LOCK_EX | LOCK_NB) < 0) {  // try exclusive lock
     throw
       JUBATUS_EXCEPTION(core::common::exception::runtime_error(

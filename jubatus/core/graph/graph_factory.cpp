@@ -32,7 +32,7 @@ shared_ptr<graph_base> graph_factory::create_graph(
     const std::string& name,
     const common::jsonconfig::config& param) {
   if (name == "graph_wo_index") {
-    return shared_ptr<graph_base>(new graph_wo_index(
+    return shared_ptr<graph_wo_index>(new graph_wo_index(
       common::jsonconfig::config_cast_check<graph_wo_index::config>(param)));
   } else {
     throw JUBATUS_EXCEPTION(unknown_graph(name));

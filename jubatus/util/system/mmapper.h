@@ -76,16 +76,13 @@ private:
   int fd;
 };
 
-}
-}
-}
-}
-
-namespace std {
-template <>
-inline void swap(jubatus::util::system::mmapper::mmapper& x, jubatus::util::system::mmapper::mmapper& y)
+inline void swap(mmapper& x, mmapper& y)
 {
   x.swap(y);
+}
+
+}
+}
 }
 }
 

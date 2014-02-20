@@ -235,7 +235,7 @@ class server_helper {
       // Stop RPC server when terminate signal is sent
       common::set_action_on_term(
           jubatus::util::lang::bind(
-              &server_helper::stop, this, jubatus::util::lang::ref(serv)));
+              &server_helper::stop_ptr, this, &serv));
 
       // wait for termination
       serv.join();
@@ -266,6 +266,12 @@ class server_helper {
     serv.end();
   }
 
+private:
+  void stop_ptr(common::mprpc::rpc_server* serv) {
+    stop(*serv);
+  }
+
+public:
   jubatus::util::lang::shared_ptr<Server> server() const {
     return server_;
   }

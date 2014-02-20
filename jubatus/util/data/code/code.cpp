@@ -35,13 +35,12 @@
 #include <fstream>
 #include <cassert>
 
-#include "../../system/file.h"
 #include "../../system/endian_util.h"
+#include "../../system/file.h"
 
 using namespace std;
-using namespace jubatus::util::system::file;
 using namespace jubatus::util::system::endian;
-
+using jubatus::util::system::file::get_file_size;
 
 namespace jubatus {
 namespace util {

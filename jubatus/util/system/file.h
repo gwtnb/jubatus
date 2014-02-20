@@ -34,24 +34,12 @@
 
 #include <sys/types.h>
 #include <iostream>
-#include <ext/stdio_filebuf.h>
 
 namespace jubatus {
 namespace util{
 namespace system{
 namespace file{
 
-class fd_stream : public std::iostream{
-public:
-  explicit fd_stream(int fd)
-    : std::iostream(&fb)
-    , fb(fd, std::ios_base::in | std::ios_base::out){
-  }
-private:
-  __gnu_cxx::stdio_filebuf<char> fb;
-};
-
-std::iostream *tmpstream(std::string &tmpl);
 ssize_t get_file_size(const std::string & fn);
 
 } // file

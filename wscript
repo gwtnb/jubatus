@@ -32,6 +32,10 @@ def options(opt):
                  action='store_true', default=False, 
                  dest='zktest', help='zk should run in localhost:2181')
 
+  opt.add_option('--cxx11',
+                 action='store_true', default=False,
+                 dest='cxx11', help='build on C++11 mode')
+
   # use (base + 10) ports for RPC module tests
   opt.add_option('--rpc-test-port-base',
                  default=60023, choices=map(str, xrange(1024, 65535 - 10)),
@@ -45,6 +49,8 @@ def options(opt):
 
 def configure(conf):
   conf.env.CXXFLAGS += ['-O2', '-Wall', '-g', '-pipe'];
+  if Options.options.cxx11:
+    conf.env.CXXFLAGS += ['-std=c++0x']
 
   conf.load('compiler_cxx')
   conf.load('unittest_gtest')
