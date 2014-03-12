@@ -16,6 +16,7 @@
 
 #include "save_load.hpp"
 
+#include <stdio.h>
 #include <ctime>
 #include <fstream>
 #include <string>
@@ -90,9 +91,14 @@ uint32_t calc_crc32(const char* header,  // header size is 28 (fixed)
   return crc32;
 }
 
+bool fwrite_with_check(const char* buf, std::size_t n, FILE* fp)
+{
+  return fwrite(buf, 1, n, fp) == n;
+}
+
 }  // namespace
 
-void save_server(std::ostream& os,
+bool save_server(FILE* fp,
     const server_base& server, const std::string& id) {
   if (id == "") {
     throw JUBATUS_EXCEPTION(
@@ -131,9 +137,17 @@ void save_server(std::ostream& os,
       user_data_buf.data(), user_data_buf.size());
   write_big_endian(crc32, &header_buf[28]);
 
-  os.write(header_buf, 48);
-  os.write(system_data_buf.data(), system_data_buf.size());
-  os.write(user_data_buf.data(), user_data_buf.size());
+  if (!fwrite_with_check(header_buf, 48, fp)) {
+    return false;
+  }
+  if (!fwrite_with_check(system_data_buf.data(), system_data_buf.size(), fp)) {
+    return false;
+  }
+  if (!fwrite_with_check(user_data_buf.data(), user_data_buf.size(), fp)) {
+    return false;
+  }
+
+  return true;
 }
 
 void load_server(std::istream& is,

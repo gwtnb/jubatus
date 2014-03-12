@@ -18,7 +18,6 @@
 
 #include <stdio.h>
 #include <sys/file.h>
-#include <ext/stdio_filebuf.h>
 #include <cerrno>
 #include <fstream>
 #include <sstream>
@@ -75,6 +74,30 @@ void load_file_impl(server_base& server,
   LOG(INFO) << "loaded from " << path;
 }
 
+class fp_holder {
+public:
+  fp_holder(const char* fname, const char* mode) {
+    fp_ = fopen(fname, mode);
+  }
+
+  ~fp_holder() {
+    close();
+  }
+
+  FILE* get() const { return fp_; }
+
+  bool is_open() { return fp_; }
+
+  int close() {
+    if (fp_ == 0)
+      return 0;
+    return fclose(fp_);
+  }
+
+private:
+  FILE* fp_;
+};
+
 }  // namespace
 
 server_base::server_base(const server_argv& a)
@@ -90,8 +113,8 @@ bool server_base::save(const std::string& id) {
   const std::string path = build_local_path(argv_, "jubatus", id);
   LOG(INFO) << "starting save to " << path;
 
-  std::ofstream ofs(path.c_str(), std::ios::trunc | std::ios::binary);
-  if (!ofs) {
+  fp_holder fp(path.c_str(), "wb");
+  if (!fp.is_open()) {
     throw JUBATUS_EXCEPTION(
       core::common::exception::runtime_error("cannot open output file")
       << core::common::exception::error_file_name(path)
@@ -99,7 +122,7 @@ bool server_base::save(const std::string& id) {
   }
 
   // use gcc-specific extension
-  int fd = static_cast<__gnu_cxx::stdio_filebuf<char> *>(ofs.rdbuf())->fd();
+  int fd = fileno(fp.get());
   if (flock(fd, LOCK_EX | LOCK_NB) < 0) {  // try exclusive lock
     throw
       JUBATUS_EXCEPTION(core::common::exception::runtime_error(
@@ -108,11 +131,21 @@ bool server_base::save(const std::string& id) {
         << core::common::exception::error_errno(errno));
   }
 
-  ofs.exceptions(std::ios_base::failbit | std::ios_base::badbit);
-  try {
-    framework::save_server(ofs, *this, id);
-    ofs.close();
-  } catch (const std::ios_base::failure&) {
+  if (!framework::save_server(fp.get(), *this, id)) {
+    goto fail;
+  }
+  if (fflush(fp.get())) {
+    goto fail;
+  }
+  if (fsync(fd)) {
+    goto fail;
+  }
+  if (fp.close()) {
+    goto fail;
+  }
+
+  if (0) {
+  fail:
     int tmperrno = errno;
     if (remove(path.c_str()) < 0) {
       LOG(WARNING) << "failed to remove " << path << ": "

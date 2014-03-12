@@ -34,6 +34,9 @@
 #include <stddef.h>
 #include <string.h>
 #include <iterator>
+#include <istream>
+#include <ostream>
+#include <string>
 
 using namespace std;
 

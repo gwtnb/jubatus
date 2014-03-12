@@ -43,14 +43,6 @@ namespace util{
 namespace system{
 namespace file{
 
-iostream *tmpstream(string &tmpl)
-{
-  if (tmpl.length()<6) return NULL;
-  int fd=mkstemp(&tmpl[0]);
-  if (fd<0) return NULL;
-  return new fd_stream(fd);
-}
-
 ssize_t get_file_size(const string & fn)
 {
   struct stat st_buf;

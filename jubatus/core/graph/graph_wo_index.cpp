@@ -16,6 +16,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <string>
 #include <utility>
@@ -42,6 +43,8 @@ namespace core {
 namespace graph {
 
 namespace {
+
+const long long long_long_max = std::numeric_limits<long long>::max();
 
 // Debug print
 void print_tree(const shortest_path_tree& spt, std::ostream& out) {
@@ -592,7 +595,7 @@ void graph_wo_index::get_diff_shortest_path_tree(
 
     for (uint64_t i = 0; i < mixed.size(); ++i) {
       const shortest_path_tree& spt = mixed[i];
-      if (spt.landmark == LONG_LONG_MAX) {
+      if (spt.landmark == long_long_max) {
         continue;
       }
       diff[i].landmark = spt.landmark;
@@ -683,14 +686,14 @@ void graph_wo_index::mix(
 
     map<node_id_t, uint64_t> diff_landmark2ind;
     for (uint64_t i = 0; i < diff.size(); ++i) {
-      if (diff[i].landmark != LONG_LONG_MAX) {
+      if (diff[i].landmark != long_long_max) {
         diff_landmark2ind[diff[i].landmark] = i;
       }
     }
 
     map<node_id_t, uint64_t> mixed_landmark2ind;
     for (uint64_t i = 0; i < mixed.size(); ++i) {
-      if (mixed[i].landmark != LONG_LONG_MAX) {
+      if (mixed[i].landmark != long_long_max) {
         mixed_landmark2ind[mixed[i].landmark] = i;
       }
     }
