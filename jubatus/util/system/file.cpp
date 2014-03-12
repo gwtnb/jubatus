@@ -31,6 +31,7 @@
 
 #include "file.h"
 
+#include <cstdio>
 #include <cstdlib>
 
 #include <sys/stat.h>
