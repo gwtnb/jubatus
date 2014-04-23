@@ -100,7 +100,7 @@ TEST(exception, custom_exception) {
      thrower = e.thrower();
   }
 
-  EXPECT_TRUE(thrower);
+  EXPECT_TRUE(static_cast<bool>(thrower));
   EXPECT_THROW(thrower->throw_exception(), test_exception::ore_exception);
 }
 
@@ -113,7 +113,7 @@ TEST(exception, derived_exception) {
      thrower = e.thrower();
   }
 
-  EXPECT_TRUE(thrower);
+  EXPECT_TRUE(static_cast<bool>(thrower));
   EXPECT_THROW(thrower->throw_exception(),
                jubatus::core::common::exception::runtime_error);
 }
@@ -128,7 +128,7 @@ TEST(exception, derived_exception_dynamic_bind) {
      thrower = e.thrower();
   }
 
-  EXPECT_TRUE(thrower);
+  EXPECT_TRUE(static_cast<bool>(thrower));
   EXPECT_THROW(thrower->throw_exception(), test_exception::derived_exception);
 }
 
@@ -207,7 +207,7 @@ TEST(exception, exception_info_macro_thrower) {
     thrower = e.thrower();
   }
 
-  EXPECT_TRUE(thrower);
+  EXPECT_TRUE(static_cast<bool>(thrower));
   EXPECT_THROW(thrower->throw_exception(), test_exception::derived_exception);
 }
 
@@ -281,7 +281,7 @@ TEST(exception, current_exception) {
     thrower = jubatus::core::common::exception::get_current_exception();
   }
 
-  EXPECT_TRUE(thrower);
+  EXPECT_TRUE(static_cast<bool>(thrower));
   EXPECT_THROW(thrower->throw_exception(), std::runtime_error);
 }
 
@@ -294,7 +294,7 @@ TEST(exception, catch_unknown_current_exception) {
     thrower = jubatus::core::common::exception::get_current_exception();
   }
 
-  EXPECT_TRUE(thrower);
+  EXPECT_TRUE(static_cast<bool>(thrower));
   EXPECT_THROW(thrower->throw_exception(),
       jubatus::core::common::exception::unknown_exception);
 }

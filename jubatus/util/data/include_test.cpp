@@ -21,9 +21,7 @@
 #include "serialization/deque.h"
 #include "serialization/vector.h"
 #include "serialization/set.h"
-#include "serialization/tr1_unordered_map.h"
 #include "serialization/iostream.h"
-#include "serialization/tr1_unordered_set.h"
 #include "serialization/map.h"
 #include "serialization/unordered_map.h"
 #include "serialization/array.h"
@@ -35,3 +33,8 @@
 #include "digest/md5.h"
 #include "unordered_set.h"
 #include "lru.h"
+
+#ifdef __GLIBCXX__
+#include "serialization/tr1_unordered_map.h"
+#include "serialization/tr1_unordered_set.h"
+#endif

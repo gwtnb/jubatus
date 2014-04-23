@@ -35,8 +35,8 @@
 
 #include "ref.h"
 
-using namespace std;
-using namespace jubatus::util::lang;
+using ::std::string;
+using namespace ::jubatus::util::lang;
 
 int foo1(int n)
 {

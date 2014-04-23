@@ -34,6 +34,7 @@
 #include "pcbuf.h"
 
 #include <map>
+#include <vector>
 
 #include "thread.h"
 #include "mutex.h"
@@ -43,7 +44,8 @@
 #include "../lang/shared_ptr.h"
 #include "../lang/bind.h"
 
-using namespace std;
+using std::map;
+using std::vector;
 using namespace jubatus::util::concurrent;
 using namespace jubatus::util::lang;
 using namespace jubatus::util::system::time;

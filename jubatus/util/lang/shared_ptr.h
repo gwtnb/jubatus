@@ -109,7 +109,7 @@ public:
   }
 
   template <class U>
-  explicit shared_ptr(std::auto_ptr<U>& p) : base(p) {}
+  explicit shared_ptr(std::auto_ptr<U>& p) : base(p.release()) {}
 
 private:
   template <class U>
